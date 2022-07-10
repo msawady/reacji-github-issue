@@ -1,14 +1,13 @@
 package bot
 
 import (
-	"fmt"
 	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
 	"log"
 	"os"
 	"slack-reacji-issue/config"
-	handler2 "slack-reacji-issue/handler"
+	"slack-reacji-issue/handler"
 )
 
 func Run(sc config.SystemConfig, rc config.ReacjiConfig) {
@@ -29,26 +28,24 @@ func Run(sc config.SystemConfig, rc config.ReacjiConfig) {
 	)
 	_, authTestErr := api.AuthTest()
 	if authTestErr != nil {
-		fmt.Fprintf(os.Stderr, "SLACK_BOT_TOKEN is invalid: %v\n", authTestErr)
-		os.Exit(1)
+		log.Fatalf("SLACK_BOT_TOKEN is invalid: %v\n", authTestErr)
 	}
 	//selfUserId := authTest.UserID
 
 	go func() {
-		handleCommand(socket, rc)
+		handleEvents(socket, rc)
 	}()
 	socket.Run()
-
 }
 
-func handleCommand(client *socketmode.Client, rc config.ReacjiConfig) {
+func handleEvents(client *socketmode.Client, rc config.ReacjiConfig) {
 
-	var h *handler2.CommandHandler
+	var h *handler.CommandHandler
 	for envelope := range client.Events {
 		switch envelope.Type {
 		case socketmode.EventTypeConnected:
 			log.Println("Connection Established.")
-			h = handler2.NewHandler(client, rc)
+			h = handler.NewHandler(client, rc)
 		case socketmode.EventTypeEventsAPI:
 			eventsAPIEvent, _ := envelope.Data.(slackevents.EventsAPIEvent)
 			client.Ack(*envelope.Request)
