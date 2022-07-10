@@ -7,3 +7,12 @@ type SystemConfig struct {
 
 	GitHubToken string `env:"GITHUB_TOKEN"`
 }
+
+type ReacjiConfig struct {
+	Settings []ReacjiSetting `toml:"settings"`
+}
+
+type ReacjiSetting struct {
+	Emoji       string `toml:"emoji"`
+	Description string `toml:"description"`
+}

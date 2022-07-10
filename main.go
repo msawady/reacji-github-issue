@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/BurntSushi/toml"
 	"log"
 
 	"slack-reacji-issue/bot"
@@ -13,10 +14,15 @@ import (
 func main() {
 
 	ctx := context.Background()
-	var c config.SystemConfig
-	if err := envconfig.Process(ctx, &c); err != nil {
-		log.Fatal(err)
+	var sc config.SystemConfig
+	if scErr := envconfig.Process(ctx, &sc); scErr != nil {
+		log.Fatal(scErr)
 	}
 
-	bot.Run(c)
+	var rc config.ReacjiConfig
+	if _, rcErr := toml.DecodeFile("reacji.toml", &rc); rcErr != nil {
+		log.Fatal(rcErr)
+	}
+
+	bot.Run(sc, rc)
 }

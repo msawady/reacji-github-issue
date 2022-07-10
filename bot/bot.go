@@ -5,13 +5,13 @@ import (
 	"github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
-
 	"log"
 	"os"
 	"slack-reacji-issue/config"
+	handler2 "slack-reacji-issue/handler"
 )
 
-func Run(sc config.SystemConfig) {
+func Run(sc config.SystemConfig, rc config.ReacjiConfig) {
 
 	log.Printf("bot_token: %s", sc.SlackBotToken)
 	log.Printf("app_token: %s", sc.SlackAppToken)
@@ -35,18 +35,20 @@ func Run(sc config.SystemConfig) {
 	//selfUserId := authTest.UserID
 
 	go func() {
-		handleCommand(socket)
+		handleCommand(socket, rc)
 	}()
 	socket.Run()
 
 }
 
-func handleCommand(client *socketmode.Client) {
+func handleCommand(client *socketmode.Client, rc config.ReacjiConfig) {
+
+	var h *handler2.CommandHandler
 	for envelope := range client.Events {
 		switch envelope.Type {
 		case socketmode.EventTypeConnected:
 			log.Println("Connection Established.")
-
+			h = handler2.NewHandler(client, rc)
 		case socketmode.EventTypeEventsAPI:
 			eventsAPIEvent, _ := envelope.Data.(slackevents.EventsAPIEvent)
 			client.Ack(*envelope.Request)
@@ -55,7 +57,7 @@ func handleCommand(client *socketmode.Client) {
 				innerEvent := eventsAPIEvent.InnerEvent
 				switch ev := innerEvent.Data.(type) {
 				case *slackevents.ReactionAddedEvent:
-					log.Println(ev.Reaction)
+					h.HandleReaction(ev)
 				}
 			}
 		default:
