@@ -12,8 +12,6 @@ import (
 
 func Run(sc config.SystemConfig, rc config.ReacjiConfig) {
 
-	log.Printf("bot_token: %s", sc.SlackBotToken)
-	log.Printf("app_token: %s", sc.SlackAppToken)
 	api := slack.New(
 		sc.SlackBotToken,
 		slack.OptionAppLevelToken(sc.SlackAppToken),
