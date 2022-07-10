@@ -1,2 +1,2 @@
-# slack-reacji-issue
-Slack bot creating GitHub issue with a specific Reacji 
+# reacji-github-issue
+Slack-bot create GitHub issue with a specific Reacji.
