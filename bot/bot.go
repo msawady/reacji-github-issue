@@ -13,8 +13,11 @@ import (
 
 func Run(sc config.SystemConfig) {
 
+	log.Printf("bot_token: %s", sc.SlackBotToken)
+	log.Printf("app_token: %s", sc.SlackAppToken)
 	api := slack.New(
-		sc.SlackToken,
+		sc.SlackBotToken,
+		slack.OptionAppLevelToken(sc.SlackAppToken),
 		slack.OptionDebug(false),
 		slack.OptionLog(log.New(os.Stdout, "slack-bot: ", log.Lshortfile|log.LstdFlags)),
 	)
@@ -52,7 +55,7 @@ func handleCommand(client *socketmode.Client) {
 				innerEvent := eventsAPIEvent.InnerEvent
 				switch ev := innerEvent.Data.(type) {
 				case *slackevents.ReactionAddedEvent:
-					log.Println(ev.Item)
+					log.Println(ev.Reaction)
 				}
 			}
 		default:
