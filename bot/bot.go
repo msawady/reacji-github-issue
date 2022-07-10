@@ -6,8 +6,8 @@ import (
 	"github.com/slack-go/slack/socketmode"
 	"log"
 	"os"
-	"slack-reacji-issue/config"
-	"slack-reacji-issue/handler"
+	"reacji-github-issue/config"
+	"reacji-github-issue/handler"
 )
 
 func Run(sc config.SystemConfig, rc config.ReacjiConfig) {

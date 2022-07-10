@@ -1,4 +1,4 @@
-module slack-reacji-issue
+module reacji-github-issue
 
 go 1.16
 

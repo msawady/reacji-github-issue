@@ -5,8 +5,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"log"
 
-	"slack-reacji-issue/bot"
-	"slack-reacji-issue/config"
+	"reacji-github-issue/bot"
+	"reacji-github-issue/config"
 
 	"github.com/sethvargo/go-envconfig"
 )

@@ -4,8 +4,8 @@ import (
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
 	"log"
-	"slack-reacji-issue/config"
-	"slack-reacji-issue/ext_service"
+	"reacji-github-issue/config"
+	"reacji-github-issue/ext_service"
 )
 
 type CommandHandler struct {
