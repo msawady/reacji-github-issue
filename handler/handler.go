@@ -47,7 +47,10 @@ func (handler *CommandHandler) HandleReaction(ev *slackevents.ReactionAddedEvent
 			if issueErr != nil {
 				return
 			}
-			log.Println(issueUrl)
+			err := handler.slackService.ReplyCreatedIssueUrl(ev, *issueUrl)
+			if err != nil {
+				return
+			}
 		} else {
 			log.Print("Skip processing because this is not first reaction.")
 		}

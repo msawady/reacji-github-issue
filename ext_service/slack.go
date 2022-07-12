@@ -44,3 +44,12 @@ func (ss SlackService) GetPermalink(event *slackevents.ReactionAddedEvent) (stri
 
 	return permalink, nil
 }
+
+func (ss SlackService) ReplyCreatedIssueUrl(event *slackevents.ReactionAddedEvent, url string) error {
+	_, _, err := ss.client.PostMessage(event.Item.Channel, slack.MsgOptionText(url, false), slack.MsgOptionTS(event.Item.Timestamp))
+	if err != nil {
+		log.Printf("falied to post reply for message. %s", err)
+		return err
+	}
+	return nil
+}
