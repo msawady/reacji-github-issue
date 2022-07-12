@@ -10,31 +10,47 @@ import (
 
 type CommandHandler struct {
 	slackService   *ext_service.SlackService
-	rc             config.ReacjiConfig
+	gitHubService  *ext_service.GitHubService
 	reacjiSettings map[string]config.ReacjiSetting
 }
 
-func NewHandler(client *socketmode.Client, reacjiConfig config.ReacjiConfig) *CommandHandler {
+func NewHandler(client *socketmode.Client, sc config.SystemConfig, reacjiConfig config.ReacjiConfig) *CommandHandler {
 
 	slackService := ext_service.NewSlackService(client)
 
 	var settings map[string]config.ReacjiSetting
 	settings = make(map[string]config.ReacjiSetting)
+	// create map for optimize searching.
 	for _, s := range reacjiConfig.Settings {
 		settings[s.Emoji] = s
 	}
 
 	log.Printf("will handling emojis: %v", settings)
 
-	return &CommandHandler{slackService, reacjiConfig, settings}
+	gitHubService := ext_service.NewGitHubService(sc)
+
+	return &CommandHandler{slackService, gitHubService, settings}
 }
 
 func (handler *CommandHandler) HandleReaction(ev *slackevents.ReactionAddedEvent) {
 	log.Printf("Handling reaction: %s from %s", ev.Reaction, ev.User)
-	if v, ok := handler.reacjiSettings[ev.Reaction]; ok {
-		log.Printf("will process %s.", v.Emoji)
+	if setting, ok := handler.reacjiSettings[ev.Reaction]; ok {
+		log.Printf("will process %s.", setting.Emoji)
 		count, _ := handler.slackService.GetReactionCountFor(ev)
-		log.Printf("reaction count %d.", count)
+		if count == 1 {
+			permalink, linkErr := handler.slackService.GetPermalink(ev)
+			if linkErr != nil {
+				return
+			}
+			param := CreateIssueParam(ev, &setting, permalink)
+			issueUrl, issueErr := handler.gitHubService.CreateIssue(param)
+			if issueErr != nil {
+				return
+			}
+			log.Println(issueUrl)
+		} else {
+			log.Print("Skip processing because this is not first reaction.")
+		}
 	} else {
 		log.Printf("skipping %s.", ev.Reaction)
 	}

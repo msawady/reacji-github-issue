@@ -31,19 +31,19 @@ func Run(sc config.SystemConfig, rc config.ReacjiConfig) {
 	//selfUserId := authTest.UserID
 
 	go func() {
-		handleEvents(socket, rc)
+		handleEvents(socket, sc, rc)
 	}()
 	socket.Run()
 }
 
-func handleEvents(client *socketmode.Client, rc config.ReacjiConfig) {
+func handleEvents(client *socketmode.Client, sc config.SystemConfig, rc config.ReacjiConfig) {
 
 	var h *handler.CommandHandler
 	for envelope := range client.Events {
 		switch envelope.Type {
 		case socketmode.EventTypeConnected:
 			log.Println("Connection Established.")
-			h = handler.NewHandler(client, rc)
+			h = handler.NewHandler(client, sc, rc)
 		case socketmode.EventTypeEventsAPI:
 			eventsAPIEvent, _ := envelope.Data.(slackevents.EventsAPIEvent)
 			client.Ack(*envelope.Request)

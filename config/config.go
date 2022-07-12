@@ -18,5 +18,7 @@ type ReacjiConfig struct {
 
 type ReacjiSetting struct {
 	Emoji       string `toml:"emoji"`
+	Owner       string `toml:"owner"`
+	Repo        string `toml:"repo"`
 	Description string `toml:"description"`
 }

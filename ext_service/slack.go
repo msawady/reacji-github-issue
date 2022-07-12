@@ -33,3 +33,14 @@ func (ss SlackService) GetReactionCountFor(event *slackevents.ReactionAddedEvent
 	log.Printf("failed to get reaction count for %s", event.Reaction)
 	return 0, nil
 }
+
+func (ss SlackService) GetPermalink(event *slackevents.ReactionAddedEvent) (string, error) {
+
+	permalink, err := ss.client.GetPermalink(&slack.PermalinkParameters{Channel: event.Item.Channel, Ts: event.Item.Timestamp})
+	if err != nil {
+		log.Printf("failed to get permalink. %v", err)
+		return "", err
+	}
+
+	return permalink, nil
+}
