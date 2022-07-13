@@ -48,5 +48,5 @@ func (ghs GitHubService) CreateIssue(param IssueParam) (*string, error) {
 	}
 	log.Printf("creates issue %v", i.URL)
 
-	return i.URL, nil
+	return i.HTMLURL, nil
 }
