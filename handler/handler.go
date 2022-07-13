@@ -38,11 +38,11 @@ func (handler *CommandHandler) HandleReaction(ev *slackevents.ReactionAddedEvent
 		log.Printf("will process %s.", setting.Emoji)
 		count, _ := handler.slackService.GetReactionCountFor(ev)
 		if count == 1 {
-			permalink, linkErr := handler.slackService.GetPermalink(ev)
+			detail, linkErr := handler.slackService.GetMessageDetail(ev)
 			if linkErr != nil {
 				return
 			}
-			param := CreateIssueParam(ev, &setting, permalink)
+			param := CreateIssueParam(ev, &setting, detail)
 			issueUrl, issueErr := handler.gitHubService.CreateIssue(param)
 			if issueErr != nil {
 				return

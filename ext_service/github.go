@@ -8,11 +8,16 @@ import (
 	"log"
 	"net/http"
 	"reacji-github-issue/config"
-	"reacji-github-issue/handler"
 )
 
 type GitHubService struct {
 	client *github.Client
+}
+
+type IssueParam struct {
+	Owner   string
+	Repo    string
+	Request github.IssueRequest
 }
 
 func NewGitHubService(sc config.SystemConfig) *GitHubService {
@@ -29,13 +34,16 @@ func NewGitHubService(sc config.SystemConfig) *GitHubService {
 }
 
 // CreateIssue create GitHub issue and returns created issue url.
-func (ghs GitHubService) CreateIssue(param handler.IssueParam) (*string, error) {
+func (ghs GitHubService) CreateIssue(param IssueParam) (*string, error) {
 
-	i, res, err := ghs.client.Issues.Create(context.Background(), param.Repo, param.Owner, param.Request)
+	log.Println(*param.Request.Title)
+	log.Println(*param.Request.Body)
+
+	i, res, err := ghs.client.Issues.Create(context.Background(), param.Owner, param.Repo, &param.Request)
 
 	log.Println(res.Status)
 	if err != nil {
-		log.Printf("failed to create issue %s", res.Body)
+		log.Printf("failed to create issue %v", err)
 		return nil, err
 	}
 	log.Printf("creates issue %v", i.URL)
