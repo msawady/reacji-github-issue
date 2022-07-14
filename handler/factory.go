@@ -16,8 +16,14 @@ from: %s
 `, detail.Permalink, setting.Description)
 
 	return ext_service.IssueParam{
-		Owner:   setting.Owner,
-		Repo:    setting.Repo,
-		Request: github.IssueRequest{Title: &detail.Message, Body: &bodyMessage},
+		Owner: setting.Owner,
+		Repo:  setting.Repo,
+		Request: github.IssueRequest{
+			Title:     &detail.Message,
+			Body:      &bodyMessage,
+			Assignees: &setting.Assignees,
+			Labels:    &setting.Labels,
+			Milestone: &setting.Milestone,
+		},
 	}
 }
