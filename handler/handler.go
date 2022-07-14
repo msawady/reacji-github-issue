@@ -42,7 +42,7 @@ func (handler *CommandHandler) HandleReaction(ev *slackevents.ReactionAddedEvent
 			if linkErr != nil {
 				return
 			}
-			param := CreateIssueParam(ev, &setting, detail)
+			param := CreateIssueParam(&setting, detail)
 			issueUrl, issueErr := handler.gitHubService.CreateIssue(param)
 			if issueErr != nil {
 				return
