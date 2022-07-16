@@ -45,8 +45,3 @@ export GITHUB_PEM_BINARY=${base64 encoded private key file.}
 go build
 go run reacji-github-issue
 ```
-
-# Limitations
-
-- You need to run your own process.
-    - Slack App uses `Socket Mode` and it is not currently allowed in the public Slack App Directory.
