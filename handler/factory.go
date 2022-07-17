@@ -15,15 +15,23 @@ from: %s
 %s
 `, detail.Permalink, setting.Description)
 
+	request := github.IssueRequest{
+		Title: &detail.Message,
+		Body:  &bodyMessage,
+	}
+
+	if len(setting.Assignees) > 0 {
+		request.Assignees = &setting.Assignees
+	}
+	if len(setting.Labels) > 0 {
+		request.Labels = &setting.Labels
+	}
+	if setting.Milestone > 0 {
+		request.Milestone = &setting.Milestone
+	}
 	return ext_service.IssueParam{
-		Owner: setting.Owner,
-		Repo:  setting.Repo,
-		Request: github.IssueRequest{
-			Title:     &detail.Message,
-			Body:      &bodyMessage,
-			Assignees: &setting.Assignees,
-			Labels:    &setting.Labels,
-			Milestone: &setting.Milestone,
-		},
+		Owner:   setting.Owner,
+		Repo:    setting.Repo,
+		Request: request,
 	}
 }
