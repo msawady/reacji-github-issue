@@ -28,7 +28,7 @@ base64 ${your-github-app.pem}
 
 ## Edit reacji.toml.
 
-- Edit `reacjira.toml` for your setting.
+- Edit `reacji.toml` for your setting.
 
 ## Set secrets as environment variables and run.
 
